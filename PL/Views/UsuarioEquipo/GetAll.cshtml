@@ -1,0 +1,70 @@
+﻿@model ML.Usuario
+@{
+    ViewBag.Title = "Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+@Scripts.Render("~/bundles/jquery")
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+
+<h2 class="text-center">Usuarios</h2>
+<hr />
+<div class="row">
+    <div class="col">
+        <label>Puedes consultar un listado con los usuarios que ya tienen asignado un equipo.</label><br />
+        <a class="btn btn-success"
+           href="@Url.Action("GetUsuariosConEquipo", "UsuarioEquipo")">
+            Consultar   <i class="fa-solid fa-house-laptop"></i>
+        </a>
+    </div>
+</div>
+<hr />
+<div>
+    @if (Model.Usuarios != null)
+    {
+        if (Model.Usuarios.Count > 0)
+        {
+            <h5 class="text-center">Usuarios sin equipo asignado.</h5><br />
+            <table class="table table-dark table-hover text-center" id="tablaUsuarios">
+                <thead>
+                    <tr>
+                        <th class="text-center">Asignar equipo</th>
+                        <th class="text-center">Usuario</th>
+                        <th class="text-center">Fecha de ingreso</th>
+                        <th class="text-center">Área</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ML.Usuario user in Model.Usuarios)
+                    {
+                        <tr>
+                            <td>
+                                <a class="btn btn-info"
+                                   href="@Url.Action("Asignar", "UsuarioEquipo", new { idUsuario = user.IdUsuario })">
+                                    <i class="fa-solid fa-computer"></i>
+                                </a>
+                            </td>
+                            <td>@user.Nombre @user.ApellidoPaterno @user.ApellidoMaterno</td>
+                            <td>@user.FechaIngreso.ToShortDateString()</td>
+                            <td>@user.Area.Nombre</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div role="alert" class="alert alert-warning">Aún no se han asignado equipos.</div>
+        }
+    }
+</div>
+<script type="text/javascript">
+    let table = new DataTable('#tablaUsuarios', {
+        reponsive: true,
+        "lengthMenu": [[5, 10, 15, 20, -1], [5, 10, 15, 20, "Todos"]],
+        searching: false,
+        language: {
+            url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+        },
+    });
+</script>

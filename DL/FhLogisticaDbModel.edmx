@@ -1,0 +1,610 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ESantiagoFhLogisticaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Area">
+          <Key>
+            <PropertyRef Name="IdArea" />
+          </Key>
+          <Property Name="IdArea" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Equipo">
+          <Key>
+            <PropertyRef Name="IdEquipo" />
+          </Key>
+          <Property Name="IdEquipo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Modelo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdMarca" Type="int" Nullable="false" />
+          <Property Name="IdTipo" Type="int" Nullable="false" />
+          <Property Name="ClaveInventario" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Marca">
+          <Key>
+            <PropertyRef Name="IdMarca" />
+          </Key>
+          <Property Name="IdMarca" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tipo">
+          <Key>
+            <PropertyRef Name="IdTipo" />
+          </Key>
+          <Property Name="IdTipo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ApellidoPaterno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ApellidoMaterno" Type="varchar" MaxLength="50" />
+          <Property Name="IdArea" Type="int" Nullable="false" />
+          <Property Name="FechaIngreso" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UsuarioEquipo">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+            <PropertyRef Name="IdEquipo" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="IdEquipo" Type="int" Nullable="false" />
+          <Property Name="FechaAsignacion" Type="date" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Equipo__IdMarca__173876EA">
+          <End Role="Marca" Type="Self.Marca" Multiplicity="1" />
+          <End Role="Equipo" Type="Self.Equipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Marca">
+              <PropertyRef Name="IdMarca" />
+            </Principal>
+            <Dependent Role="Equipo">
+              <PropertyRef Name="IdMarca" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Equipo__IdTipo__182C9B23">
+          <End Role="Tipo" Type="Self.Tipo" Multiplicity="1" />
+          <End Role="Equipo" Type="Self.Equipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tipo">
+              <PropertyRef Name="IdTipo" />
+            </Principal>
+            <Dependent Role="Equipo">
+              <PropertyRef Name="IdTipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Usuario__IdArea__1B0907CE">
+          <End Role="Area" Type="Self.Area" Multiplicity="1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="IdArea" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="IdArea" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioEq__IdEqu__1ED998B2">
+          <End Role="Equipo" Type="Self.Equipo" Multiplicity="1" />
+          <End Role="UsuarioEquipo" Type="Self.UsuarioEquipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Equipo">
+              <PropertyRef Name="IdEquipo" />
+            </Principal>
+            <Dependent Role="UsuarioEquipo">
+              <PropertyRef Name="IdEquipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioEq__IdUsu__1DE57479">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="UsuarioEquipo" Type="Self.UsuarioEquipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="UsuarioEquipo">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="EquipoGetEquiposSinAsignar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="EquipoGetEquiposSinAsignarByIdMarcaAndIdTipo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdMarca" Type="int" Mode="In" />
+          <Parameter Name="IdTipo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="MarcaGetAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="TipoGetAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UsuarioEquipoAdd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdUsuario" Type="int" Mode="In" />
+          <Parameter Name="IdEquipo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UsuarioEquipoDelete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdUsuario" Type="int" Mode="In" />
+          <Parameter Name="IdEquipo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UsuarioEquipoGetAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UsuarioEquipoUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdUsuario" Type="int" Mode="In" />
+          <Parameter Name="IdEquipo" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UsuarioGetAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UsuarioGetById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdUsuario" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UsuarioGetUsuariosSinEquipo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="ESantiagoFhLogisticaModelStoreContainer">
+          <EntitySet Name="Area" EntityType="Self.Area" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Equipo" EntityType="Self.Equipo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Marca" EntityType="Self.Marca" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tipo" EntityType="Self.Tipo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsuarioEquipo" EntityType="Self.UsuarioEquipo" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Equipo__IdMarca__173876EA" Association="Self.FK__Equipo__IdMarca__173876EA">
+            <End Role="Marca" EntitySet="Marca" />
+            <End Role="Equipo" EntitySet="Equipo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Equipo__IdTipo__182C9B23" Association="Self.FK__Equipo__IdTipo__182C9B23">
+            <End Role="Tipo" EntitySet="Tipo" />
+            <End Role="Equipo" EntitySet="Equipo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Usuario__IdArea__1B0907CE" Association="Self.FK__Usuario__IdArea__1B0907CE">
+            <End Role="Area" EntitySet="Area" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioEq__IdEqu__1ED998B2" Association="Self.FK__UsuarioEq__IdEqu__1ED998B2">
+            <End Role="Equipo" EntitySet="Equipo" />
+            <End Role="UsuarioEquipo" EntitySet="UsuarioEquipo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioEq__IdUsu__1DE57479" Association="Self.FK__UsuarioEq__IdUsu__1DE57479">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="UsuarioEquipo" EntitySet="UsuarioEquipo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ESantiagoFhLogisticaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Area">
+          <Key>
+            <PropertyRef Name="IdArea" />
+          </Key>
+          <Property Name="IdArea" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK__Usuario__IdArea__1B0907CE" FromRole="Area" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Equipo">
+          <Key>
+            <PropertyRef Name="IdEquipo" />
+          </Key>
+          <Property Name="IdEquipo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Modelo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IdMarca" Type="Int32" Nullable="false" />
+          <Property Name="IdTipo" Type="Int32" Nullable="false" />
+          <Property Name="ClaveInventario" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Marca" Relationship="Self.FK__Equipo__IdMarca__173876EA" FromRole="Equipo" ToRole="Marca" />
+          <NavigationProperty Name="Tipo" Relationship="Self.FK__Equipo__IdTipo__182C9B23" FromRole="Equipo" ToRole="Tipo" />
+          <NavigationProperty Name="UsuarioEquipo" Relationship="Self.FK__UsuarioEq__IdEqu__1ED998B2" FromRole="Equipo" ToRole="UsuarioEquipo" />
+        </EntityType>
+        <EntityType Name="Marca">
+          <Key>
+            <PropertyRef Name="IdMarca" />
+          </Key>
+          <Property Name="IdMarca" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Equipo" Relationship="Self.FK__Equipo__IdMarca__173876EA" FromRole="Marca" ToRole="Equipo" />
+        </EntityType>
+        <EntityType Name="Tipo">
+          <Key>
+            <PropertyRef Name="IdTipo" />
+          </Key>
+          <Property Name="IdTipo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Equipo" Relationship="Self.FK__Equipo__IdTipo__182C9B23" FromRole="Tipo" ToRole="Equipo" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ApellidoPaterno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ApellidoMaterno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdArea" Type="Int32" Nullable="false" />
+          <Property Name="FechaIngreso" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Area" Relationship="Self.FK__Usuario__IdArea__1B0907CE" FromRole="Usuario" ToRole="Area" />
+          <NavigationProperty Name="UsuarioEquipo" Relationship="Self.FK__UsuarioEq__IdUsu__1DE57479" FromRole="Usuario" ToRole="UsuarioEquipo" />
+        </EntityType>
+        <EntityType Name="UsuarioEquipo">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+            <PropertyRef Name="IdEquipo" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdEquipo" Type="Int32" Nullable="false" />
+          <Property Name="FechaAsignacion" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Equipo" Relationship="Self.FK__UsuarioEq__IdEqu__1ED998B2" FromRole="UsuarioEquipo" ToRole="Equipo" />
+          <NavigationProperty Name="Usuario" Relationship="Self.FK__UsuarioEq__IdUsu__1DE57479" FromRole="UsuarioEquipo" ToRole="Usuario" />
+        </EntityType>
+        <Association Name="FK__Usuario__IdArea__1B0907CE">
+          <End Role="Area" Type="Self.Area" Multiplicity="1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Area">
+              <PropertyRef Name="IdArea" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="IdArea" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Equipo__IdMarca__173876EA">
+          <End Role="Marca" Type="Self.Marca" Multiplicity="1" />
+          <End Role="Equipo" Type="Self.Equipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Marca">
+              <PropertyRef Name="IdMarca" />
+            </Principal>
+            <Dependent Role="Equipo">
+              <PropertyRef Name="IdMarca" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Equipo__IdTipo__182C9B23">
+          <End Role="Tipo" Type="Self.Tipo" Multiplicity="1" />
+          <End Role="Equipo" Type="Self.Equipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tipo">
+              <PropertyRef Name="IdTipo" />
+            </Principal>
+            <Dependent Role="Equipo">
+              <PropertyRef Name="IdTipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioEq__IdEqu__1ED998B2">
+          <End Role="Equipo" Type="Self.Equipo" Multiplicity="1" />
+          <End Role="UsuarioEquipo" Type="Self.UsuarioEquipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Equipo">
+              <PropertyRef Name="IdEquipo" />
+            </Principal>
+            <Dependent Role="UsuarioEquipo">
+              <PropertyRef Name="IdEquipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioEq__IdUsu__1DE57479">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="UsuarioEquipo" Type="Self.UsuarioEquipo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="UsuarioEquipo">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ESantiagoFhLogisticaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Area" EntityType="Self.Area" />
+          <EntitySet Name="Equipo" EntityType="Self.Equipo" />
+          <EntitySet Name="Marca" EntityType="Self.Marca" />
+          <EntitySet Name="Tipo" EntityType="Self.Tipo" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+          <EntitySet Name="UsuarioEquipo" EntityType="Self.UsuarioEquipo" />
+          <AssociationSet Name="FK__Usuario__IdArea__1B0907CE" Association="Self.FK__Usuario__IdArea__1B0907CE">
+            <End Role="Area" EntitySet="Area" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Equipo__IdMarca__173876EA" Association="Self.FK__Equipo__IdMarca__173876EA">
+            <End Role="Marca" EntitySet="Marca" />
+            <End Role="Equipo" EntitySet="Equipo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Equipo__IdTipo__182C9B23" Association="Self.FK__Equipo__IdTipo__182C9B23">
+            <End Role="Tipo" EntitySet="Tipo" />
+            <End Role="Equipo" EntitySet="Equipo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioEq__IdEqu__1ED998B2" Association="Self.FK__UsuarioEq__IdEqu__1ED998B2">
+            <End Role="Equipo" EntitySet="Equipo" />
+            <End Role="UsuarioEquipo" EntitySet="UsuarioEquipo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioEq__IdUsu__1DE57479" Association="Self.FK__UsuarioEq__IdUsu__1DE57479">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="UsuarioEquipo" EntitySet="UsuarioEquipo" />
+          </AssociationSet>
+          <FunctionImport Name="UsuarioEquipoGetAll" ReturnType="Collection(ESantiagoFhLogisticaModel.UsuarioEquipoGetAll_Result)" />
+          <FunctionImport Name="EquipoGetEquiposSinAsignar" ReturnType="Collection(ESantiagoFhLogisticaModel.EquipoGetEquiposSinAsignar_Result)" />
+          <FunctionImport Name="UsuarioGetUsuariosSinEquipo" ReturnType="Collection(ESantiagoFhLogisticaModel.UsuarioGetUsuariosSinEquipo_Result)" />
+          <FunctionImport Name="UsuarioGetAll" ReturnType="Collection(ESantiagoFhLogisticaModel.UsuarioGetAll_Result)" />
+          <FunctionImport Name="UsuarioGetById" ReturnType="Collection(ESantiagoFhLogisticaModel.UsuarioGetById_Result)">
+          <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UsuarioEquipoAdd">
+            <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+            <Parameter Name="IdEquipo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UsuarioEquipoDelete">
+            <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+            <Parameter Name="IdEquipo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="EquipoGetEquiposSinAsignarByIdMarcaAndIdTipo" ReturnType="Collection(ESantiagoFhLogisticaModel.EquipoGetEquiposSinAsignarByIdMarcaAndIdTipo_Result)">
+            <Parameter Name="IdMarca" Mode="In" Type="Int32" />
+            <Parameter Name="IdTipo" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="MarcaGetAll" ReturnType="Collection(ESantiagoFhLogisticaModel.MarcaGetAll_Result)" />
+          <FunctionImport Name="TipoGetAll" ReturnType="Collection(ESantiagoFhLogisticaModel.TipoGetAll_Result)" />
+          <FunctionImport Name="UsuarioEquipoUpdate">
+            <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+            <Parameter Name="IdEquipo" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="UsuarioEquipoGetAll_Result">
+          <Property Type="Int32" Name="IdUsuario" Nullable="false" />
+          <Property Type="String" Name="NombreUsuario" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaIngreso" Nullable="false" />
+          <Property Type="Int32" Name="IdArea" Nullable="false" />
+          <Property Type="String" Name="NombreArea" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdEquipo" Nullable="false" />
+          <Property Type="String" Name="Modelo" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ClaveInventario" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdTipo" Nullable="false" />
+          <Property Type="String" Name="NombreTipo" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdMarca" Nullable="false" />
+          <Property Type="String" Name="NombreMarca" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaAsignacion" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="EquipoGetEquiposSinAsignar_Result">
+          <Property Type="Int32" Name="IdEquipo" Nullable="false" />
+          <Property Type="String" Name="Modelo" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ClaveInventario" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdMarca" Nullable="false" />
+          <Property Type="String" Name="NombreMarca" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdTipo" Nullable="false" />
+          <Property Type="String" Name="NombreTipo" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="UsuarioGetUsuariosSinEquipo_Result">
+          <Property Type="Int32" Name="IdUsuario" Nullable="false" />
+          <Property Type="String" Name="NombreUsuario" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaIngreso" Nullable="false" />
+          <Property Type="Int32" Name="IdArea" Nullable="false" />
+          <Property Type="String" Name="NombreArea" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="UsuarioGetAll_Result">
+          <Property Type="Int32" Name="IdUsuario" Nullable="false" />
+          <Property Type="String" Name="NombreUsuario" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaIngreso" Nullable="false" />
+          <Property Type="Int32" Name="IdArea" Nullable="false" />
+          <Property Type="String" Name="NombreArea" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="UsuarioGetById_Result">
+          <Property Type="Int32" Name="IdUsuario" Nullable="false" />
+          <Property Type="String" Name="NombreUsuario" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaIngreso" Nullable="false" />
+          <Property Type="Int32" Name="IdArea" Nullable="false" />
+          <Property Type="String" Name="NombreArea" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="EquipoGetEquiposSinAsignarByIdMarcaAndIdTipo_Result">
+          <Property Type="Int32" Name="IdEquipo" Nullable="false" />
+          <Property Type="String" Name="Modelo" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ClaveInventario" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdMarca" Nullable="false" />
+          <Property Type="String" Name="NombreMarca" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdTipo" Nullable="false" />
+          <Property Type="String" Name="NombreTipo" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="MarcaGetAll_Result">
+          <Property Type="Int32" Name="IdMarca" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="TipoGetAll_Result">
+          <Property Type="Int32" Name="IdTipo" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ESantiagoFhLogisticaModelStoreContainer" CdmEntityContainer="ESantiagoFhLogisticaEntities">
+          <EntitySetMapping Name="Area">
+            <EntityTypeMapping TypeName="ESantiagoFhLogisticaModel.Area">
+              <MappingFragment StoreEntitySet="Area">
+                <ScalarProperty Name="IdArea" ColumnName="IdArea" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Equipo">
+            <EntityTypeMapping TypeName="ESantiagoFhLogisticaModel.Equipo">
+              <MappingFragment StoreEntitySet="Equipo">
+                <ScalarProperty Name="IdEquipo" ColumnName="IdEquipo" />
+                <ScalarProperty Name="Modelo" ColumnName="Modelo" />
+                <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+                <ScalarProperty Name="IdTipo" ColumnName="IdTipo" />
+                <ScalarProperty Name="ClaveInventario" ColumnName="ClaveInventario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Marca">
+            <EntityTypeMapping TypeName="ESantiagoFhLogisticaModel.Marca">
+              <MappingFragment StoreEntitySet="Marca">
+                <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tipo">
+            <EntityTypeMapping TypeName="ESantiagoFhLogisticaModel.Tipo">
+              <MappingFragment StoreEntitySet="Tipo">
+                <ScalarProperty Name="IdTipo" ColumnName="IdTipo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuario">
+            <EntityTypeMapping TypeName="ESantiagoFhLogisticaModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="IdArea" ColumnName="IdArea" />
+                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsuarioEquipo">
+            <EntityTypeMapping TypeName="ESantiagoFhLogisticaModel.UsuarioEquipo">
+              <MappingFragment StoreEntitySet="UsuarioEquipo">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdEquipo" ColumnName="IdEquipo" />
+                <ScalarProperty Name="FechaAsignacion" ColumnName="FechaAsignacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="UsuarioEquipoGetAll" FunctionName="ESantiagoFhLogisticaModel.Store.UsuarioEquipoGetAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESantiagoFhLogisticaModel.UsuarioEquipoGetAll_Result">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+                <ScalarProperty Name="IdArea" ColumnName="IdArea" />
+                <ScalarProperty Name="NombreArea" ColumnName="NombreArea" />
+                <ScalarProperty Name="IdEquipo" ColumnName="IdEquipo" />
+                <ScalarProperty Name="Modelo" ColumnName="Modelo" />
+                <ScalarProperty Name="ClaveInventario" ColumnName="ClaveInventario" />
+                <ScalarProperty Name="IdTipo" ColumnName="IdTipo" />
+                <ScalarProperty Name="NombreTipo" ColumnName="NombreTipo" />
+                <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+                <ScalarProperty Name="NombreMarca" ColumnName="NombreMarca" />
+                <ScalarProperty Name="FechaAsignacion" ColumnName="FechaAsignacion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="EquipoGetEquiposSinAsignar" FunctionName="ESantiagoFhLogisticaModel.Store.EquipoGetEquiposSinAsignar">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESantiagoFhLogisticaModel.EquipoGetEquiposSinAsignar_Result">
+                <ScalarProperty Name="IdEquipo" ColumnName="IdEquipo" />
+                <ScalarProperty Name="Modelo" ColumnName="Modelo" />
+                <ScalarProperty Name="ClaveInventario" ColumnName="ClaveInventario" />
+                <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+                <ScalarProperty Name="NombreMarca" ColumnName="NombreMarca" />
+                <ScalarProperty Name="IdTipo" ColumnName="IdTipo" />
+                <ScalarProperty Name="NombreTipo" ColumnName="NombreTipo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UsuarioGetUsuariosSinEquipo" FunctionName="ESantiagoFhLogisticaModel.Store.UsuarioGetUsuariosSinEquipo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESantiagoFhLogisticaModel.UsuarioGetUsuariosSinEquipo_Result">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+                <ScalarProperty Name="IdArea" ColumnName="IdArea" />
+                <ScalarProperty Name="NombreArea" ColumnName="NombreArea" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UsuarioGetAll" FunctionName="ESantiagoFhLogisticaModel.Store.UsuarioGetAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESantiagoFhLogisticaModel.UsuarioGetAll_Result">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+                <ScalarProperty Name="IdArea" ColumnName="IdArea" />
+                <ScalarProperty Name="NombreArea" ColumnName="NombreArea" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UsuarioGetById" FunctionName="ESantiagoFhLogisticaModel.Store.UsuarioGetById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESantiagoFhLogisticaModel.UsuarioGetById_Result">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+                <ScalarProperty Name="IdArea" ColumnName="IdArea" />
+                <ScalarProperty Name="NombreArea" ColumnName="NombreArea" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UsuarioEquipoAdd" FunctionName="ESantiagoFhLogisticaModel.Store.UsuarioEquipoAdd" />
+          <FunctionImportMapping FunctionImportName="UsuarioEquipoDelete" FunctionName="ESantiagoFhLogisticaModel.Store.UsuarioEquipoDelete" />
+          <FunctionImportMapping FunctionImportName="EquipoGetEquiposSinAsignarByIdMarcaAndIdTipo" FunctionName="ESantiagoFhLogisticaModel.Store.EquipoGetEquiposSinAsignarByIdMarcaAndIdTipo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESantiagoFhLogisticaModel.EquipoGetEquiposSinAsignarByIdMarcaAndIdTipo_Result">
+                <ScalarProperty Name="IdEquipo" ColumnName="IdEquipo" />
+                <ScalarProperty Name="Modelo" ColumnName="Modelo" />
+                <ScalarProperty Name="ClaveInventario" ColumnName="ClaveInventario" />
+                <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+                <ScalarProperty Name="NombreMarca" ColumnName="NombreMarca" />
+                <ScalarProperty Name="IdTipo" ColumnName="IdTipo" />
+                <ScalarProperty Name="NombreTipo" ColumnName="NombreTipo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="MarcaGetAll" FunctionName="ESantiagoFhLogisticaModel.Store.MarcaGetAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESantiagoFhLogisticaModel.MarcaGetAll_Result">
+                <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="TipoGetAll" FunctionName="ESantiagoFhLogisticaModel.Store.TipoGetAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ESantiagoFhLogisticaModel.TipoGetAll_Result">
+                <ScalarProperty Name="IdTipo" ColumnName="IdTipo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UsuarioEquipoUpdate" FunctionName="ESantiagoFhLogisticaModel.Store.UsuarioEquipoUpdate" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

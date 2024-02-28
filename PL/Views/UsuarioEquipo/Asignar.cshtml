@@ -1,0 +1,126 @@
+﻿@model ML.UsuarioEquipo
+@{
+    ViewBag.Title = "Asignar equipo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+@Scripts.Render("~/bundles/jquery")
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+
+<h2 class="text-center">Asignar equipo</h2>
+<hr />
+<div>
+    <h4>Usuario: @Model.Usuario.Nombre @Model.Usuario.ApellidoPaterno @Model.Usuario.ApellidoMaterno</h4>
+    <h4>Área: @Model.Usuario.Area.Nombre</h4>
+</div>
+<br />
+<div>
+    @using (Html.BeginForm("GetEquipos", "UsuarioEquipo", FormMethod.Get, new { enctype = "multipart/form-data" }))
+    {
+        <p>Puedes filtrar la busqueda de equipos.</p>
+        <div class="row">
+            <div class="col col-3">
+                <label>Marca</label>
+                <select class="form-select" name="idMarca" id="ddlMarca">
+                    <option value="0">Todas</option>
+                    @foreach (ML.Marca marca in Model.Equipo.Marca.Marcas)
+                    {
+                        <option value="@marca.IdMarca">@marca.Nombre</option>
+                    }
+                </select>
+            </div>
+            <div class="col col-3">
+                <label>Tipo de equipo</label>
+                <select class="form-select" name="idTipo" id="ddlTipo">
+                    <option value="0">Todos</option>
+                    @foreach (ML.Tipo tipo in Model.Equipo.Tipo.Tipos)
+                    {
+                        <option value="@tipo.IdTipo">@tipo.Nombre</option>
+                    }
+                </select>
+            </div>
+            <div class="col col-3">
+                <br />
+                <button class="btn btn-success" onclick="SaveMarca(), SaveTipo()" onselect="submit">Buscar</button>
+                <a class="btn btn-danger" onclick="DeleteSesions()" href="@Url.Action(Model.Equipo.IdEquipo != 0 ? "GetUsuariosConEquipo" : "GetAll", "UsuarioEquipo")">Volver</a>
+            </div>
+        </div>
+        <input name="idUsuario" value="@Model.Usuario.IdUsuario" hidden />
+    }
+</div>
+<hr />
+<div>
+    @if (Model.Equipo.Equipos != null)
+    {
+        if (Model.Equipo.Equipos.Count > 0)
+        {
+            <h5 class="text-center">Equipos disponibles.</h5><br />
+            <table class="table table-dark table-hover text-center" id="tablaEquipos">
+                <thead>
+                    <tr>
+                        <th class="text-center">Seleccionar</th>
+                        <th class="text-center">Clave inventario</th>
+                        <th class="text-center">Marca</th>
+                        <th class="text-center">Modelo</th>
+                        <th class="text-center">Tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ML.Equipo equipo in Model.Equipo.Equipos)
+                    {
+                        <tr>
+                            <th>
+                                <a class="btn btn-primary" onclick="if (confirm('¿Estás seguro?')) { DeleteSesions(); } else { return false; }"
+                                   href="@Url.Action("SetAsignacion", "UsuarioEquipo", new { accion = Model.Equipo.IdEquipo == 0 ? "add" : "update" , idEquipo = equipo.IdEquipo, idUsuario = Model.Usuario.IdUsuario })">
+                                    <i class="fa-regular fa-hand-pointer"></i>
+                                </a>
+                            </th>
+                            <td>@equipo.ClaveInventario</td>
+                            <td>@equipo.Marca.Nombre</td>
+                            <td>@equipo.Modelo</td>
+                            <td>@equipo.Tipo.Nombre</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div role="alert" class="alert alert-warning">No hay equipos disponibles con esas características.</div>
+        }
+    }
+
+</div>
+
+<script>
+    if (sessionStorage.getItem('idMarca') != null) {
+        let element = document.getElementById('ddlMarca');
+        element.value = sessionStorage.getItem('idMarca');
+    }
+    if (sessionStorage.getItem('idTipo') != null) {
+        let element = document.getElementById('ddlTipo');
+        element.value = sessionStorage.getItem('idTipo');
+    }
+
+    function SaveMarca() {
+        let idMarca = document.getElementById('ddlMarca').value;
+        sessionStorage.setItem('idMarca', idMarca);
+    }
+    function SaveTipo() {
+        let idTipo = document.getElementById('ddlTipo').value;
+        sessionStorage.setItem('idTipo', idTipo);
+    }
+    function DeleteSesions() {
+        sessionStorage.clear();
+    }
+
+    let table = new DataTable('#tablaEquipos', {
+        reponsive: true,
+        "lengthMenu": [[5, 10, 15, 20, -1], [5, 10, 15, 20, "Todos"]],
+        searching: false,
+        language: {
+            url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+        },
+    });
+</script>
